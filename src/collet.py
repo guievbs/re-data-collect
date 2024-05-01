@@ -1,6 +1,8 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+from tqdm import tqdm
+import pandas as pd
 
 def get_headers(file_path) -> any:
     with open(file_path, 'r') as file:
@@ -65,8 +67,7 @@ def get_links() -> list:
 links_characters:list = get_links()
 data_characters = []
 
-for link in links_characters:
-    print(link)
+for link in tqdm(links_characters):
     character = get_characters_infos(link)
     if character != None:  # Check if the character dictionary is not empty
         character['Link'] = link  # Assign the link to the character dictionary
