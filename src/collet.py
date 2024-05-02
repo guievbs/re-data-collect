@@ -71,6 +71,23 @@ for link in tqdm(links_characters):
     character = get_characters_infos(link)
     if character != None:  # Check if the character dictionary is not empty
         character['Link'] = link  # Assign the link to the character dictionary
+        name = link.strip('/').split('/')[-1].replace('-', '').title()
+        character['Name'] = name
         data_characters.append(character)
-    else:
-        print(f"Failed to retrieve data for {link}. Skipping...")
+
+# Creating the id and dataframe
+df = pd.DataFrame(data_characters)
+df
+
+# Filtering out rows where 'de nascimento' column is not NaN
+fix = df.query('not `de nascimento`.isna()')
+df.loc[101, 'Ano de nascimento'] = df.loc[101, 'de nascimento']
+df = df.drop(columns='de nascimento')
+
+# Displaying the DataFrame
+df
+
+# Save DataFrame - JSON Format (txt)
+df.to_json('../data/re_data.json', index=False)
+# Save DataFrame - Parquet Format (bin)
+df.to_parquet('../data/re_data.parquet', index=False)
